@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreServiceRequest;
+use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -11,7 +14,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        //
+        $services = Service::all();
+        return view('admin.services.index', compact('services'));
     }
 
     /**
@@ -19,15 +23,23 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.services.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
-        //
+        $data = $request->all();
+        if ($request->hasFile('icon')) {
+            $file = $request->file('icon');
+            $fileName = time() . '-' . $file->getClientOriginalName();
+            $path = $file->storeAs('icons', $fileName);
+        }
+        $data['icon'] = $path;
+        $services = Service::create($data);
+        return redirect()->route('admin.services.index')->with('message', 'Create successful');
     }
 
     /**
@@ -43,15 +55,26 @@ class ServiceController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $services = Service::findOrFail($id);
+        return view('admin.services.edit', compact('services'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreServiceRequest $request, string $id)
     {
-        //
+        $services = Service::findOrFail($id);
+        $data = $request->validated();
+        if ($request->hasFile('icon')) {
+            Storage::delete('icon');
+            $file = $request->file('icon');
+            $fileName = time() . '-' . $file->getClientOriginalName();
+            $path = $file->storeAs('icons', $fileName);
+        }
+        $data['icon'] = $path;
+        $services->update($data);
+        return redirect()->route('admin.services.index')->with('message', 'Update successful!');
     }
 
     /**
@@ -59,6 +82,11 @@ class ServiceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $services = Service::findOrFail($id);
+        if ($services->image && Storage::exists($services->image)) {
+            Storage::delete($services->image);
+        }
+        $services->delete();
+        return back()->with('message', 'Delete successful!');
     }
 }

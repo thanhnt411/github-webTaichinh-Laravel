@@ -68,6 +68,7 @@ class CategoryController extends Controller
         $categories = Category::findOrFail($id);
         $data = $request->validated();
         if ($request->hasFile('image')) {
+            Storage::delete('image');
             $file = $request->file('image');
             $fileName = time() . '-' . $file->getClientOriginalName();
             $path = $file->storeAs('images', $fileName);

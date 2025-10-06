@@ -1,27 +1,29 @@
 @extends('layouts.admin')
 @section('content')
-    <a href="{{ route('admin.categories.create') }}" class="btn btn-success mb-2"><i class="fa-solid fa-plus"></i>Thêm</a>
+    <a href="{{ route('admin.services.create') }}" class="btn btn-success mb-2"><i class="fa-solid fa-plus"></i>Thêm</a>
     <table class="table table-bordered text-center">
         <thead>
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Image</th>
-                <th scope="col">Title</th>
+                <th scope="col">Icon</th>
+                <th scope="col">Short_description</th>
+                <th scope="col">Content</th>
                 <th scope="col">Sửa</th>
                 <th scope="col">Xóa</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($categories as $category)
+            @foreach ($services as $service)
                 <tr>
-                    <td>{{ $category->id }}</td>
-                    <td><img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->title }}"></td>
-                    <td>{{ $category->title }}</td>
-                    <td><button class="btn btn-warning"><a href="{{ route('admin.categories.edit', $category->id) }}"><i
+                    <td>{{ $service->id }}</td>
+                    <td><img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->title }}"></td>
+                    <td>{{ $service->short_description }}</td>
+                    <td>{{ $service->content }}</td>
+                    <td><button class="btn btn-warning"><a href="{{ route('admin.services.edit', $service->id) }}"><i
                                     class="fa-solid fa-pencil"></i></a></button>
                     </td>
                     <td>
-                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
+                        <form action="{{ route('admin.services.destroy', $service->id) }}" method="POST"
                             onsubmit="return confirm('Xóa bài này?')">
                             @csrf
                             @method('DELETE')
