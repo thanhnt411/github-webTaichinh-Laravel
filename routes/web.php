@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\FeedbacController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\IntroduceController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PartnerController;
@@ -28,7 +28,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::resource('services', ServiceController::class);
     Route::resource('trainings', TrainingController::class);
     Route::resource('products', ProductController::class);
-    Route::resource('feedbacks', FeedbacController::class);
+    Route::resource('feedbacks', FeedbackController::class);
     Route::resource('partners', PartnerController::class);
     Route::resource('statistics', StatisticController::class);
     Route::resource('news', NewsController::class);
