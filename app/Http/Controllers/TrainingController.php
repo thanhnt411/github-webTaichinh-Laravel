@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTrainingRequest;
+use App\Models\Training;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TrainingController extends Controller
 {
@@ -11,7 +14,8 @@ class TrainingController extends Controller
      */
     public function index()
     {
-        //
+        $trainings = Training::all();
+        return view('admin.trainings.index', compact('trainings'));
     }
 
     /**
@@ -19,15 +23,23 @@ class TrainingController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.trainings.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTrainingRequest $request)
     {
-        //
+        $data = $request->validated();
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = time() . '-' . $file->getClientOriginalName();
+            $path = $file->storeAs('images', $fileName);
+        }
+        $data['image'] = $path;
+        $trainings = Training::create($data);
+        return redirect()->route('admin.trainings.index')->with('message', 'Create successful');
     }
 
     /**
@@ -43,15 +55,26 @@ class TrainingController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $training = Training::findOrFail($id);
+        return view('admin.trainings.edit', compact('training'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreTrainingRequest $request, string $id)
     {
-        //
+        $training = Training::findOrFail($id);
+        $data = $request->validated();
+        if ($request->hasFile('image')) {
+            Storage::delete('image');
+            $file = $request->file('image');
+            $fileName = time() . '-' . $file->getClientOriginalName();
+            $path = $file->storeAs('images', $fileName);
+        }
+        $data['image'] = $path;
+        $training->update($data);
+        return redirect()->route('admin.trainings.index')->with('message', 'Create successful');
     }
 
     /**
@@ -59,6 +82,11 @@ class TrainingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $training = Training::findOrFail($id);
+        if ($training->image && Storage::exists($training->image)) {
+            Storage::delete($training->image);
+        }
+        $training->delete();
+        return back()->with('message', 'Delete successful');
     }
 }
