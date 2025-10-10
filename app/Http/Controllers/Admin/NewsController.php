@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreNewsRequest;
 use App\Models\News;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreNewsRequest;
 use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller

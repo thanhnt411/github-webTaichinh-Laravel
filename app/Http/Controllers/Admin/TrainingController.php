@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreTrainingRequest;
 use App\Models\Training;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreTrainingRequest;
 
 class TrainingController extends Controller
 {

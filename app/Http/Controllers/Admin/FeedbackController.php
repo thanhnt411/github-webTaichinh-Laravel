@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreFeedbackRequest;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreFeedbackRequest;
 
 class FeedbackController extends Controller
 {
