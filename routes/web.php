@@ -1,36 +1,20 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\FeedbackController;
-use App\Http\Controllers\IntroduceController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\PartnerController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\SliderController;
-use App\Http\Controllers\StatisticController;
-use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin', function () {
-    return view('layouts/admin');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('admin')->as('admin.')->group(function () {
-    Route::resource('sliders', SliderController::class);
-    Route::resource('introduces', IntroduceController::class);
-    Route::resource('categories', CategoryController::class);
-    Route::resource('services', ServiceController::class);
-    Route::resource('trainings', TrainingController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('feedbacks', FeedbackController::class);
-    Route::resource('partners', PartnerController::class);
-    Route::resource('statistics', StatisticController::class);
-    Route::resource('news', NewsController::class);
-    Route::resource('settings', SettingController::class);
-});
+require __DIR__.'/auth.php';
