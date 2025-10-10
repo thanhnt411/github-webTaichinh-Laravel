@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreStatisticRequest;
+use App\Models\Statistic;
 use Illuminate\Http\Request;
 
 class StatisticController extends Controller
@@ -11,7 +13,8 @@ class StatisticController extends Controller
      */
     public function index()
     {
-        //
+        $statistics = Statistic::all();
+        return view('admin.statistics.index', compact('statistics'));
     }
 
     /**
@@ -19,15 +22,16 @@ class StatisticController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.statistics.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStatisticRequest $request)
     {
-        //
+        $statistics = Statistic::create($request->validated());
+        return redirect()->route('admin.statistics.index')->with('message', 'Create successful!');
     }
 
     /**
@@ -43,15 +47,18 @@ class StatisticController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $statistics = Statistic::findOrFail($id);
+        return view('admin.statistics.edit', compact('statistics'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreStatisticRequest $request, string $id)
     {
-        //
+        $statistics = Statistic::findOrFail($id);
+        $statistics->update($request->validated());
+        return redirect()->route('admin.statistics.index')->with('message', 'Create successful!');
     }
 
     /**
@@ -59,6 +66,8 @@ class StatisticController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $statistics = Statistic::findOrFail($id);
+        $statistics->delete();
+        return back()->with('message', 'Delete successful!');
     }
 }
